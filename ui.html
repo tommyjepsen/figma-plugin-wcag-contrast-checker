@@ -1,0 +1,202 @@
+<link rel="stylesheet" href="style.css" />
+<script src="https://cdn.tailwindcss.com"></script>
+<div class="flex flex-col gap-4 p-4 overflow-y-scroll">
+  <h1 class="font-bold">WCAG 2.1 Color Contrast Checker</h1>
+  <div class="flex flex-row gap-4 text-sm items-center">
+    <div id="hex1color" class="h-6 w-6 shrink-0 rounded-lg"></div>
+    <p>
+      Foreground color:
+      <input
+        id="hex1"
+        class="border border-gray-300 px-2 py-2 rounded"
+        value="#DB5350"
+      />
+    </p>
+  </div>
+  <div class="flex flex-row gap-4 text-sm items-center">
+    <div id="hex2color" class="h-6 w-6 shrink-0 rounded-lg"></div>
+    <p>
+      Background color:
+      <input
+        id="hex2"
+        class="border border-gray-300 px-2 py-2 rounded"
+        value="#4D80EE"
+      />
+    </p>
+  </div>
+  <p class="text-sm font-bold">
+    Contrast Ratio:
+    <span id="ratio"></span>
+  </p>
+
+  <div class="flex flex-col border rounded border-gray-200 p-4">
+    <div class="flex flex-row justify-between">
+      <h2 class="mb-2 text-sm">Normal text</h2>
+      <h2 id="normaltextshow" class="mb-2 bg-blue-500 text-red-500 px-2 py-1 text-xs">Hello example</h2>
+    </div>
+    <div class="flex flex-row justify-between">
+      <p class="text-sm">WCAG AA</p>
+      <span class="flex flex-row text-xs font-bold items-center gap-2">
+        <p id="normalwcagaatext">PASS</p>
+        <div
+          id="normalwcagaa"
+          class="h-3 w-3 bg-green-500 shrink-0 rounded-full"
+        ></div>
+      </span>
+    </div>
+    <div class="flex flex-row justify-between">
+      <p class="text-sm">WCAG AAA</p>
+      <span class="flex flex-row text-xs font-bold items-center gap-2">
+        <p id="normalwcagaaatext">PASS</p>
+        <div
+          id="normalwcagaaa"
+          class="h-3 w-3 bg-green-500 shrink-0 rounded-full"
+        ></div>
+      </span>
+    </div>
+  </div>
+
+  <div class="flex flex-col border rounded border-gray-200 p-4">
+    <div class="flex flex-row justify-between">
+      <h2 class="mb-2 text-lg">Larger text</h2>
+      <h2 id="largetextshow" class="mb-2 bg-blue-500 text-red-500 px-2 py-1 text-base">Hello example</h2>
+    </div>
+    <div class="flex flex-row justify-between">
+      <p class="text-sm">WCAG AA</p>
+      <span class="flex flex-row text-xs font-bold items-center gap-2">
+        <p id="largewcagaatext">PASS</p>
+        <div
+          id="largewcagaa"
+          class="h-3 w-3 bg-green-500 shrink-0 rounded-full"
+        ></div>
+      </span>
+    </div>
+    <div class="flex flex-row justify-between">
+      <p class="text-sm">WCAG AAA</p>
+      <span class="flex flex-row text-xs font-bold items-center gap-2">
+        <p id="largewcagaaatext">PASS</p>
+        <div
+          id="largewcagaaa"
+          class="h-3 w-3 bg-green-500 shrink-0 rounded-full"
+        ></div>
+      </span>
+    </div>
+  </div>
+</div>
+
+<script>
+  function hexToRgb(hex) {
+    hex = hex.replace("#", "");
+
+    if (!/^[0-9A-F]{6}$/i.test(hex)) {
+      return [0, 0, 0];
+    }
+
+    const r = parseInt(hex.substring(0, 2), 16);
+    const g = parseInt(hex.substring(2, 4), 16);
+    const b = parseInt(hex.substring(4, 6), 16);
+
+    return [r, g, b];
+  }
+
+  function getContrastRatio(rgb1, rgb2) {
+    function getLuminance(rgb) {
+      const [red, green, blue] = rgb;
+      const sRGB = [red / 255, green / 255, blue / 255];
+
+      const gammaCorrected = sRGB.map((val) => {
+        return val <= 0.03928 ? val / 12.92 : ((val + 0.055) / 1.055) ** 2.4;
+      });
+
+      const luma =
+        0.2126 * gammaCorrected[0] +
+        0.7152 * gammaCorrected[1] +
+        0.0722 * gammaCorrected[2];
+
+      return luma;
+    }
+
+    const luminance1 = getLuminance(rgb1);
+    const luminance2 = getLuminance(rgb2);
+
+    const lighter = Math.max(luminance1, luminance2);
+    const darker = Math.min(luminance1, luminance2);
+
+    const contrastRatio = (lighter + 0.05) / (darker + 0.05);
+
+    return contrastRatio;
+  }
+
+  const onClicked = () => {
+    const hex1 = document.querySelector("#hex1").value;
+    document.querySelector("#hex1color").style.backgroundColor = hex1;
+    
+    const hex2 = document.querySelector("#hex2").value;
+    document.querySelector("#hex2color").style.backgroundColor = hex2;
+    
+    //
+    document.querySelector("#normaltextshow").style.backgroundColor = hex2;
+    document.querySelector("#normaltextshow").style.color = hex1;
+    document.querySelector("#largetextshow").style.backgroundColor = hex2;
+    document.querySelector("#largetextshow").style.color = hex1;
+
+    //
+    let ratio = +getContrastRatio(hexToRgb(hex1), hexToRgb(hex2));
+    ratio = ratio.toFixed(2);
+    if (ratio < 4.5) {
+      document.querySelector("#normalwcagaa").style.backgroundColor = "red";
+      document.querySelector("#normalwcagaatext").textContent = "FAIL";
+    } else {
+      document.querySelector("#normalwcagaa").style.backgroundColor = "green";
+      document.querySelector("#normalwcagaatext").textContent = "PASS";
+    }
+    if (ratio < 7) {
+      document.querySelector("#normalwcagaaa").style.backgroundColor = "red";
+      document.querySelector("#normalwcagaaatext").textContent = "FAIL";
+    } else {
+      document.querySelector("#normalwcagaaa").style.backgroundColor = "green";
+      document.querySelector("#normalwcagaaatext").textContent = "PASS";
+    }
+    if (ratio < 3) {
+      document.querySelector("#largewcagaa").style.backgroundColor = "red";
+      document.querySelector("#largewcagaatext").textContent = "FAIL";
+    } else {
+      document.querySelector("#largewcagaa").style.backgroundColor = "green";
+      document.querySelector("#largewcagaatext").textContent = "PASS";
+    }
+    if (ratio < 4.5) {
+      document.querySelector("#largewcagaaa").style.backgroundColor = "red";
+      document.querySelector("#largewcagaaatext").textContent = "FAIL";
+    } else {
+      document.querySelector("#largewcagaaa").style.backgroundColor = "green";
+      document.querySelector("#largewcagaaatext").textContent = "PASS";
+    }
+    document.querySelector("#ratio").textContent = ratio;
+  };
+
+  document.querySelector("#hex1").onkeyup = () => {
+    const hex1 = document.querySelector("#hex1").value;
+    document.querySelector("#hex1color").style.backgroundColor = hex1;
+    onClicked();
+  };
+  document.querySelector("#hex1").onchange = () => {
+    const hex1 = document.querySelector("#hex1").value;
+    document.querySelector("#hex1color").style.backgroundColor = hex1;
+    onClicked();
+  };
+  document.querySelector("#hex2").onkeyup = () => {
+    const hex2 = document.querySelector("#hex2").value;
+    document.querySelector("#hex2color").style.backgroundColor = hex2;
+    onClicked();
+  };
+  document.querySelector("#hex2").onchange = () => {
+    const hex2 = document.querySelector("#hex2").value;
+    document.querySelector("#hex2color").style.backgroundColor = hex2;
+  };
+  document.addEventListener("DOMContentLoaded", () => {
+    console.log("DOMContentLoaded");
+    setTimeout(() => {
+      onClicked();
+    }, 0);
+  });
+</script>

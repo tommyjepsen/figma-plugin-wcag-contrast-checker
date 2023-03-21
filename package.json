@@ -1,0 +1,16 @@
+{
+  "name": "SimpleColorContrastChecker",
+  "version": "1.0.0",
+  "description": "My Simple Color Contrast Checker",
+  "main": "code.js",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "watch": "npm run build -- --watch"
+  },
+  "author": "Tommy Jepsen",
+  "license": "",
+  "devDependencies": {
+    "@figma/plugin-typings": "^1.62.0",
+    "typescript": "*"
+  }
+}

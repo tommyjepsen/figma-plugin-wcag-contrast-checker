@@ -1,0 +1,12 @@
+{
+  "name": "Simple color contrast checker",
+  "id": "1220101069607769508",
+  "api": "1.0.0",
+  "main": "code.js",
+  "capabilities": [],
+  "enableProposedApi": false,
+  "editorType": [
+    "figma"
+  ],
+  "ui": "ui.html"
+}
