@@ -1,41 +1,62 @@
-<link rel="stylesheet" href="style.css" />
 <script src="https://cdn.tailwindcss.com"></script>
-<div class="flex flex-col gap-4 p-4 overflow-y-scroll">
-  <h1 class="font-bold">WCAG 2.1 Color Contrast Checker</h1>
-  <div class="flex flex-row gap-4 text-sm items-center">
-    <div id="hex1color" class="h-6 w-6 shrink-0 rounded-lg"></div>
-    <p>
-      Foreground color:
+<div class="flex flex-col gap-3 p-4">
+  <h1 class="font-bold text-sm mb-2">WCAG 2.1 Color Contrast Checker</h1>
+  <div class="flex flex-col">
+    <label class="text-xs font-bold pb-1">Foreground color</label>
+    <div class="flex flex-row gap-1 text-sm items-center">
+      <input
+        value="#DB5350"
+        type="color"
+        id="hex1color"
+        class="colorpicker shrink-0 border-none outline-none h-8 w-7 shrink-0 rounded-full"
+      />
+
       <input
         id="hex1"
-        class="border border-gray-300 px-2 py-2 rounded"
+        class="border border-gray-200 px-2 py-2 rounded text-xs flex-1"
         value="#DB5350"
+        maxlength="7"
       />
-    </p>
+    </div>
   </div>
-  <div class="flex flex-row gap-4 text-sm items-center">
-    <div id="hex2color" class="h-6 w-6 shrink-0 rounded-lg"></div>
-    <p>
-      Background color:
+  <div class="flex flex-col">
+    <label class="text-xs font-bold pb-1">Background color</label>
+    <div class="flex flex-row gap-1 text-sm items-center">
+      <input
+        value="#4D80EE"
+        type="color"
+        id="hex2color"
+        class="colorpicker shrink-0 border-none outline-none h-8 w-7 shrink-0 rounded-full"
+      />
+
       <input
         id="hex2"
-        class="border border-gray-300 px-2 py-2 rounded"
+        class="border border-gray-200 px-2 py-2 rounded text-xs flex-1"
         value="#4D80EE"
+        maxlength="7"
+        minlength="2"
       />
-    </p>
+    </div>
   </div>
-  <p class="text-sm font-bold">
+  <p class="text-xs font-bold">
     Contrast Ratio:
     <span id="ratio"></span>
   </p>
 
-  <div class="flex flex-col border rounded border-gray-200 p-4">
-    <div class="flex flex-row justify-between">
-      <h2 class="mb-2 text-sm">Normal text</h2>
-      <h2 id="normaltextshow" class="mb-2 bg-blue-500 text-red-500 px-2 py-1 text-xs">Hello example</h2>
+  <div class="flex flex-col border rounded border-gray-200">
+    <div
+      class="flex flex-row justify-between border-b p-3 border-gray-200 items-center"
+    >
+      <h2 class="text-xs">Normal text</h2>
+      <h2
+        id="normaltextshow"
+        class="bg-blue-500 text-red-500 px-2 py-1 text-xs"
+      >
+        Hello example
+      </h2>
     </div>
-    <div class="flex flex-row justify-between">
-      <p class="text-sm">WCAG AA</p>
+    <div class="flex flex-row justify-between px-3 pt-3">
+      <p class="text-xs">WCAG AA</p>
       <span class="flex flex-row text-xs font-bold items-center gap-2">
         <p id="normalwcagaatext">PASS</p>
         <div
@@ -44,8 +65,8 @@
         ></div>
       </span>
     </div>
-    <div class="flex flex-row justify-between">
-      <p class="text-sm">WCAG AAA</p>
+    <div class="flex flex-row justify-between px-3 pb-3">
+      <p class="text-xs">WCAG AAA</p>
       <span class="flex flex-row text-xs font-bold items-center gap-2">
         <p id="normalwcagaaatext">PASS</p>
         <div
@@ -56,12 +77,19 @@
     </div>
   </div>
 
-  <div class="flex flex-col border rounded border-gray-200 p-4">
-    <div class="flex flex-row justify-between">
-      <h2 class="mb-2 text-lg">Larger text</h2>
-      <h2 id="largetextshow" class="mb-2 bg-blue-500 text-red-500 px-2 py-1 text-base">Hello example</h2>
+  <div class="flex flex-col border rounded border-gray-200">
+    <div
+      class="flex flex-row justify-between border-b p-3 border-gray-200 items-center"
+    >
+      <h2 class="text-base">Larger text</h2>
+      <h2
+        id="largetextshow"
+        class="bg-blue-500 text-red-500 px-2 py-1 text-base"
+      >
+        Hello example
+      </h2>
     </div>
-    <div class="flex flex-row justify-between">
+    <div class="flex flex-row justify-between px-3 pt-3">
       <p class="text-sm">WCAG AA</p>
       <span class="flex flex-row text-xs font-bold items-center gap-2">
         <p id="largewcagaatext">PASS</p>
@@ -71,7 +99,7 @@
         ></div>
       </span>
     </div>
-    <div class="flex flex-row justify-between">
+    <div class="flex flex-row justify-between px-3 pb-3">
       <p class="text-sm">WCAG AAA</p>
       <span class="flex flex-row text-xs font-bold items-center gap-2">
         <p id="largewcagaaatext">PASS</p>
@@ -82,6 +110,9 @@
       </span>
     </div>
   </div>
+  <p class="text-gray-300 text-xs mt-3 text-center w-full">
+    Made by <a href="https://linkedin.com/in/toje">@Tommy Jepsen</a> ✌️
+  </p>
 </div>
 
 <script>
@@ -129,11 +160,11 @@
 
   const onClicked = () => {
     const hex1 = document.querySelector("#hex1").value;
-    document.querySelector("#hex1color").style.backgroundColor = hex1;
-    
+    document.querySelector("#hex1color").value = hex1;
+
     const hex2 = document.querySelector("#hex2").value;
-    document.querySelector("#hex2color").style.backgroundColor = hex2;
-    
+    document.querySelector("#hex2color").value = hex2;
+
     //
     document.querySelector("#normaltextshow").style.backgroundColor = hex2;
     document.querySelector("#normaltextshow").style.color = hex1;
@@ -176,27 +207,60 @@
 
   document.querySelector("#hex1").onkeyup = () => {
     const hex1 = document.querySelector("#hex1").value;
-    document.querySelector("#hex1color").style.backgroundColor = hex1;
+    document.querySelector("#hex1color").value = hex1;
     onClicked();
   };
   document.querySelector("#hex1").onchange = () => {
     const hex1 = document.querySelector("#hex1").value;
-    document.querySelector("#hex1color").style.backgroundColor = hex1;
+    document.querySelector("#hex1color").value = hex1;
     onClicked();
+  };
+  document.querySelector("#hex1color").onchange = () => {
+    const hex1 = document.querySelector("#hex1color").value;
+    document.querySelector("#hex1").value = hex1;
+    setTimeout(() => {
+      onClicked();
+    }, 0);
   };
   document.querySelector("#hex2").onkeyup = () => {
     const hex2 = document.querySelector("#hex2").value;
-    document.querySelector("#hex2color").style.backgroundColor = hex2;
+    document.querySelector("#hex2color").value = hex2;
     onClicked();
   };
   document.querySelector("#hex2").onchange = () => {
     const hex2 = document.querySelector("#hex2").value;
-    document.querySelector("#hex2color").style.backgroundColor = hex2;
+    document.querySelector("#hex2color").value = hex2;
+    onClicked();
+  };
+  document.querySelector("#hex2color").onchange = () => {
+    const hex2 = document.querySelector("#hex2color").value;
+    document.querySelector("#hex2").value = hex2;
+    setTimeout(() => {
+      onClicked();
+    }, 0);
   };
   document.addEventListener("DOMContentLoaded", () => {
-    console.log("DOMContentLoaded");
     setTimeout(() => {
       onClicked();
     }, 0);
   });
 </script>
+<style>
+  /*------ Style 1 ------*/
+  .colorpicker {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+  }
+  .colorpicker::-webkit-color-swatch {
+    border-radius: 15px;
+    border: none;
+  }
+  .colorpicker::-moz-color-swatch {
+    border-radius: 15px;
+    border: none;
+  }
+</style>
